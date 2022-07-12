@@ -12,9 +12,22 @@ const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   useEffect(() => {
-    setFormIsValid(
-      enteredEmail.includes("@") && enteredPassword.trim().length > 6
-    );
+    //debouncing for check form validation status
+    const identifier = setTimeout(() => {
+      console.log("typing");
+      setFormIsValid(
+        enteredEmail.includes("@") && enteredPassword.trim().length > 6
+      );
+    }, 500);
+
+    // return a clean up function
+    // this will run as a clen up process before useEffect execute it next time
+    // and before the component is removed from DOM
+    // it will not run first execution but after all execution
+    return () => {
+      console.log("CLEANUP");
+      clearTimeout(identifier);
+    };
   }, [enteredEmail, enteredPassword]);
 
   const emailChangeHandler = (event) => {
